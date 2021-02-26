@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -61,9 +62,36 @@ public class FXMLController implements Initializable {
     private TableColumn<?,?> column_height ;
     @FXML
     private TableColumn<?,?> column_phone ;
-            
+     
+    //TextFieldValidation
+    @FXML
+    private Label error_name;
+    @FXML
+    private Label error_address;
+    @FXML
+    private Label error_status;
+    @FXML
+    private Label error_weight;
+    @FXML
+    private Label error_height;
+    @FXML
+    private Label error_phone;
+    
     @FXML
     private void action_adddata(ActionEvent event) throws SQLException {
+        boolean isNameEmpty = test.TextFieldValidation.isTextFieldNotEmpty(txt_name,error_name,"name is require");
+        boolean isAddressEmpty = test.TextFieldValidation.isTextFieldNotEmpty(txt_address,error_address,"address is require");
+        boolean isStatusEmpty = test.TextFieldValidation.isTextFieldNotEmpty(txt_status,error_status,"status is require");
+        
+       // boolean isPhoneEmpty = test.TextFieldValidation.isTextFieldNotEmpty(txt_phone,error_phone,"phone is requime");
+        
+        boolean isWeightEmpty = test.TextFieldValidation.istextFieldTypeNumber(txt_weight,error_weight,"weight must be number");
+        boolean isHeightEmpty = test.TextFieldValidation.istextFieldTypeNumber(txt_height,error_height,"height must be number");
+        boolean isPhoneEmpty = test.TextFieldValidation.istextFieldTypeNumber(txt_phone,error_phone,"phone must be number");
+        
+      
+        if(isNameEmpty&&isAddressEmpty&&isStatusEmpty&&isWeightEmpty&&isHeightEmpty&&isPhoneEmpty  )
+        {
         String sql = "INSERT INTO WORKER(db_name,db_address,db_status,db_weight,db_height,db_phone) VALUES(?,?,?,?,?,?)";
         String name = txt_name.getText();
         String address = txt_address.getText();
@@ -95,7 +123,7 @@ public class FXMLController implements Initializable {
         {
             sta.close();
         }
-    }
+    }}
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
