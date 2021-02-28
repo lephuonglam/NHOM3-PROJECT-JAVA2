@@ -3,27 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test;
+package LaborManagement;
 
 /**
  *
  * @author Admin
  */
 public class Worker {
+   private String id;
    private String name;
    private String address;
    private String status;
-   private double weight;
-   private double height;
+   private String weight;
+   private String height;
    private String phone;
 
-    public Worker(String name, String address, String status, double weight, double height, String phone) {
+    public Worker(String id,String name, String address, String status, String weight, String height, String phone) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.status = status;
         this.weight = weight;
         this.height = height;
         this.phone = phone;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -50,19 +60,19 @@ public class Worker {
         this.status = status;
     }
 
-    public double getWeight() {
+    public String getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 
-    public double getHeight() {
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
