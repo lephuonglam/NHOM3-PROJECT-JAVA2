@@ -48,6 +48,10 @@ public class FXMLController implements Initializable {
     @FXML
     private TextField txt_phone;
     
+    @FXML
+    private TextField txt_search;
+    
+    
     private Connection con = null;
     private PreparedStatement sta = null;
     private ResultSet rs = null;
@@ -94,7 +98,7 @@ public class FXMLController implements Initializable {
         boolean isAddressEmpty = TextValidation.TextFieldValidation.isTextFieldNotEmpty(txt_address,error_address,"address is require");
         boolean isStatusEmpty = TextValidation.TextFieldValidation.isTextFieldNotEmpty(txt_status,error_status,"status is require");
         
-       // boolean isPhoneEmpty = test.TextFieldValidation.isTextFieldNotEmpty(txt_phone,error_phone,"phone is requime");
+        // boolean isPhoneEmpty = test.TextFieldValidation.isTextFieldNotEmpty(txt_phone,error_phone,"phone is requime");
         
         boolean isWeightEmpty = TextValidation.TextFieldValidation.istextFieldTypeNumber(txt_weight,error_weight,"weight must be number");
         boolean isHeightEmpty = TextValidation.TextFieldValidation.istextFieldTypeNumber(txt_height,error_height,"height must be number");
@@ -146,9 +150,11 @@ public class FXMLController implements Initializable {
         setCellTable();
         loadData();
         setCellValueFromTableToTextField();
+        searchWorker();
         
 
-    }    
+    }
+    // load thông tin all worker ra table    
     private void setCellTable()
     {
         column_id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -180,6 +186,7 @@ public class FXMLController implements Initializable {
    //hiện all thông tin worker từ bảng sang form điền khi click bào 1 worker bất kì
    private void setCellValueFromTableToTextField()
    {
+       clearTextField();
        tableWorker.setOnMouseClicked(new EventHandler<MouseEvent>()
        {
              @Override
@@ -256,4 +263,63 @@ public class FXMLController implements Initializable {
          txt_height.clear();
          txt_phone.clear();
     }
-}
+    @FXML
+    private void action_deletedata(ActionEvent event) throws SQLException {
+        boolean isIdEmpty = TextValidation.TextFieldValidation.isTextFieldNotEmpty(txt_id,error_id,"ID is require");   
+        if(isIdEmpty) {
+        String sql = "delete from WORKER where db_id = ?";
+
+        try {
+           
+            sta = con.prepareStatement(sql);
+            sta.setString(1, txt_id.getText());            
+            int i = sta.executeUpdate();
+            if(i==1)
+             {       
+               AlertDialog.display("Info", "Successful data delete");
+               loadData();
+               clearTextField();
+             }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }}
+    @FXML
+    private void searchWorker() {
+        txt_search.setOnKeyReleased(e ->{
+        if (txt_search.getText().equals(""))
+        {
+            loadData();
+        }
+        else {
+        data.clear();
+        String sql = "select * from WORKER where db_id like '%"+txt_search.getText()+"%'" 
+             +  "UNION select * from WORKER where db_name like '%" + txt_search.getText()+ "%'" 
+             +  "UNION select * from WORKER where db_address like '%" + txt_search.getText()+ "%'" 
+             +  "UNION select * from WORKER where db_status like '%" + txt_search.getText()+ "%'" 
+             +  "UNION select * from WORKER where db_weight like '%" + txt_search.getText()+ "%'" 
+             +  "UNION select * from WORKER where db_height like '%" + txt_search.getText()+ "%'" 
+             +  "UNION select * from WORKER where db_phone like '%" + txt_search.getText()+ "%'" ;
+              
+        try {
+            
+            sta = con.prepareStatement(sql);
+            rs = sta.executeQuery();
+            while(rs.next())
+             {       
+                     System.out.println("" + rs.getString(1));
+                     data.add(new Worker(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+             }
+            tableWorker.setItems(data);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        }
+        });
+       
+
+        
+    
+}}
